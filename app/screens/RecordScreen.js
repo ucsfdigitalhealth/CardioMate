@@ -30,7 +30,10 @@ function ListingsScreen() {
 
   const { user } = useAuth();
 
-  var newArray = data.filter((d) => d.userId == user.userId);
+  console.log(data);
+
+  var newArray = data.filter((d) => d.user_id == user.userId);
+  console.log(newArray);
 
   return (
     <>
@@ -43,7 +46,9 @@ function ListingsScreen() {
             keyExtractor={(listing) => listing.id.toString()}
             renderItem={({ item }) => (
               <AppRecordText>
-                <Text style={styles.logodescColor}>Q{item.questionId}:</Text>
+                <Text style={styles.logodescColor}>
+                  {item.crave_use}: {item.substance_fruit} {"\n"}
+                </Text>
                 {moment(item.created_at).format(" dddd MMM Do, YYYY - hh:mm a")}
               </AppRecordText>
             )}
@@ -57,10 +62,10 @@ function ListingsScreen() {
 const styles = StyleSheet.create({
   screen: {
     padding: 10,
-    backgroundColor: colors.lightGreen,
   },
   logodescColor: {
-    color: colors.logo,
+    color: colors.black,
+    fontWeight: "bold",
   },
 });
 

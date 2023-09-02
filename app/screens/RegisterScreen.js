@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, ScrollView } from "react-native";
 
 import * as Yup from "yup";
 import colors from "../config/colors";
@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
   genCategory: Yup.object().required().nullable().label("Gender"),
   ageCategory: Yup.object().required().nullable().label("Age"),
   raceCategory: Yup.object().required().nullable().label("Race"),
-  catDog: Yup.object().required().nullable().label("Cat/Dog"),
+  //catDog: Yup.object().required().nullable().label("Cat/Dog"),
 });
 
 const genCategories = [
@@ -49,6 +49,16 @@ const ageCategories = [
   { label: "28", value: 28 },
   { label: "29", value: 29 },
   { label: "30", value: 30 },
+  { label: "31", value: 31 },
+  { label: "32", value: 32 },
+  { label: "33", value: 33 },
+  { label: "34", value: 34 },
+  { label: "35", value: 35 },
+  { label: "36", value: 36 },
+  { label: "37", value: 37 },
+  { label: "38", value: 38 },
+  { label: "39", value: 39 },
+  { label: "40", value: 40 },
 ];
 
 const raceCategories = [
@@ -58,10 +68,15 @@ const raceCategories = [
   { label: "Prefer Not to State", value: 4 },
 ];
 
-const catDog = [
-  { label: "cat", value: 1 },
-  { label: "dog", value: 2 },
+const preference = [
+  { label: "Fruit", value: 1 },
+  { label: "Substance", value: 2 },
 ];
+
+// const catDog = [
+//   { label: "Cat", value: 1 },
+//   { label: "Dog", value: 2 },
+// ];
 
 function RegisterScreen(props) {
   const registerApi = useApi(usersApi.register);
@@ -93,74 +108,77 @@ function RegisterScreen(props) {
     <>
       <AppActivityIndicator visible={registerApi.loading || loginApi.loading} />
       <Screen style={styles.container}>
-        <Image style={styles.logo} source={require("../assets/logo.png")} />
+        <ScrollView>
+          <Image style={styles.logo} source={require("../assets/logo.png")} />
 
-        <AppForm
-          initialValues={{
-            name: "",
-            email: "",
-            genCategory: "",
-            ageCategory: "",
-            raceCategory: "",
-            catDog: "",
-            password: "",
-          }}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          <CustomErrorMessage error={error} visible={error} />
-          <AppFormField
-            autoCapitalize
-            autoCorrect={false}
-            icon="account-circle"
-            placeholder="Given Name"
-            textContentType="givenName"
-            name="name"
-          />
-          <AppFormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="email"
-            keyboardType="email-address"
-            placeholder="Email"
-            textContentType="emailAddress"
-            name="email"
-          />
-          <AppFormPicker
-            items={genCategories}
-            placeholder="Gender"
-            icon="account-group"
-            name="genCategory"
-          />
-          <AppFormPicker
-            items={ageCategories}
-            placeholder="Age"
-            icon="account-child"
-            name="ageCategory"
-          />
-          <AppFormPicker
-            items={raceCategories}
-            placeholder="Race"
-            icon="account-child"
-            name="raceCategory"
-          />
-          <AppFormPicker
-            items={catDog}
-            placeholder="Dog Person or Cat Person?"
-            icon="paw"
-            name="catDog"
-          />
-          <AppFormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="lock"
-            placeholder="Password"
-            secureTextEntry={true}
-            textContentType="password"
-            name="password"
-          />
-          <SubmitButton title="Register" />
-        </AppForm>
+          <AppForm
+            initialValues={{
+              name: "",
+              email: "",
+              genCategory: "",
+              ageCategory: "",
+              raceCategory: "",
+              preference: "",
+              //catDog: "",
+              password: "",
+            }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <CustomErrorMessage error={error} visible={error} />
+            <AppFormField
+              autoCapitalize
+              autoCorrect={false}
+              icon="account-circle"
+              placeholder="Given Name"
+              textContentType="givenName"
+              name="name"
+            />
+            <AppFormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              keyboardType="email-address"
+              placeholder="Email"
+              textContentType="emailAddress"
+              name="email"
+            />
+            <AppFormPicker
+              items={genCategories}
+              placeholder="Gender"
+              icon="account-group"
+              name="genCategory"
+            />
+            <AppFormPicker
+              items={ageCategories}
+              placeholder="Age"
+              icon="account-child"
+              name="ageCategory"
+            />
+            <AppFormPicker
+              items={raceCategories}
+              placeholder="Race"
+              icon="account-child"
+              name="raceCategory"
+            />
+            <AppFormPicker
+              items={preference}
+              placeholder="Naming Preference"
+              icon="account-child"
+              name="preference"
+            />
+            <AppFormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              placeholder="Password"
+              secureTextEntry={true}
+              textContentType="password"
+              name="password"
+            />
+            <SubmitButton title="Register" />
+          </AppForm>
+        </ScrollView>
       </Screen>
     </>
   );

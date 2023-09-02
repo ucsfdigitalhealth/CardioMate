@@ -9,6 +9,8 @@ import FeedNavigator from "./FeedNavigator";
 import NewListingButton from "./NewListingButton";
 import expoPushTokensApi from "../api/expoPushTokens";
 import navigation from "./rootNavigation";
+import colors from "../config/colors";
+import QuestionnaireStep2Screen from "../screens/QuestionnaireStep2Screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +18,7 @@ const AppNavigator = () => {
   useEffect(() => {
     registerForPushNotifications();
     Notifications.addPushTokenListener((notification) =>
-      navigation.navigate("Questionnaire")
+      navigation.navigate("My Account")
     );
   }, []);
 
@@ -31,13 +33,21 @@ const AppNavigator = () => {
     }
   };
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+      }}
+    >
       <Tab.Screen
         name="My Account"
         component={RecordNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="badge-account-horizontal-outline"
+              color={color}
+              size={35}
+            />
           ),
         }}
       />
@@ -56,27 +66,8 @@ const AppNavigator = () => {
           headerShown: false,
         })}
       />
-      <Tab.Screen
-        name="Questionnaire"
-        component={QuestionnaireScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="beaker-question"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 };
 
 export default AppNavigator;
-
-// const screenOptions = {
-//   tabBarStyle: {
-//     backgroundColor: "#76d6cb",
-//   },
-// };

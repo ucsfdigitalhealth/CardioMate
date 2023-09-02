@@ -5,7 +5,6 @@ import ListItem from "../components/ListItem";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
-import ListItemSeparator from "../components/ListItemSeparator";
 import useAuth from "../auth/useAuth";
 
 const menuItems = [
@@ -28,14 +27,14 @@ const menuItems = [
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
 
-  if (user.catdog == "cat") {
+  if (user.catdog == "Cat") {
     var imSource = require("../assets/catuser.png");
   } else {
     var imSource = require("../assets/doguser.png");
   }
 
   return (
-    <Screen style={styles.screen}>
+    <Screen>
       <View style={styles.container}>
         <ListItem title={user.name} subTitle={user.email} image={imSource} />
         <ListItem
@@ -46,7 +45,7 @@ function AccountScreen({ navigation }) {
       </View>
       <View style={styles.container}>
         <ListItem
-          title="My Registered Questionnaires"
+          title="My Records"
           IconComponent={
             <Icon
               name="format-list-bulleted"
@@ -60,7 +59,6 @@ function AccountScreen({ navigation }) {
         <FlatList
           data={menuItems}
           keyExtractor={(menuItem) => menuItem.title}
-          ItemSeparatorComponent={ListItemSeparator}
           renderItem={({ item }) => (
             <ListItem
               title={item.title}
@@ -76,9 +74,9 @@ function AccountScreen({ navigation }) {
         />
       </View>
       <ListItem
-        title="Downloads"
+        title="FitBit Connection"
         IconComponent={
-          <Icon name="download-box" backgroundColor={colors.primary} />
+          <Icon name="sync-circle" backgroundColor={colors.primary} />
         }
         onPress={() => navigation.navigate("Downloads")}
       />
@@ -95,10 +93,7 @@ function AccountScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
-  },
-  screen: {
-    backgroundColor: colors.lightGreen,
+    marginVertical: 15,
   },
 });
 
