@@ -14,6 +14,7 @@ export const addListing = (listing, onUploadProgress) => {
   data.append("substanceLabel", listing.substanceLabel);
   data.append("cuseValue", listing.cuseValue);
   data.append("cuseLabel", listing.cuseLabel);
+  data.append("userBadge", listing.userBadge);
   console.log(data);
   // listing.images.forEach((image, index) =>
   //   data.append("images", {

@@ -33,7 +33,7 @@ function ListingsScreen() {
   console.log(data);
 
   var newArray = data.filter((d) => d.user_id == user.userId);
-  console.log(newArray);
+  console.log(newArray.length);
 
   return (
     <>

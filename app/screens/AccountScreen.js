@@ -1,11 +1,12 @@
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 
 import ListItem from "../components/ListItem";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
 import useAuth from "../auth/useAuth";
+import endpointURL from "../api/serverPoint";
 
 const menuItems = [
   {
@@ -26,6 +27,24 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
+  const [userData, setUserData] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
+  const getUsers = async () => {
+    try {
+      const response = await fetch(endpointURL + "/users");
+      const json = await response.json();
+      setUserData(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   if (user.catdog == "Cat") {
     var imSource = require("../assets/catuser.png");
@@ -39,7 +58,9 @@ function AccountScreen({ navigation }) {
         <ListItem title={user.name} subTitle={user.email} image={imSource} />
         <ListItem
           title="Your Awarded Stars:"
-          subTitle={user.badge.toString()}
+          subTitle={
+            isLoading ? <Text>Loading...</Text> : userData[0].badge.toString()
+          }
           image={require("../assets/star.png")}
         />
       </View>

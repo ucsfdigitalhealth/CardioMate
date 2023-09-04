@@ -113,6 +113,7 @@ const craveUse = [
 function QuestionnaireScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
   const getQuestions = async () => {
     try {
       const response = await fetch(endpointURL + "/questions");
@@ -131,7 +132,7 @@ function QuestionnaireScreen({ navigation }) {
 
   const { user } = useAuth();
   //var hours = new Date().getHours();
-  console.log(user);
+  //console.log(user);
   if (user.preference == "Fruit") {
     var finalId = 0;
     var imSource = require("../assets/animations/fruits.png");
