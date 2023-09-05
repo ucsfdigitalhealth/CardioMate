@@ -19,7 +19,7 @@ function ListingsScreen({ navigation }) {
     request: loadListings,
   } = useApi(listingsApi.getListings);
 
-  console.log(listings);
+  //console.log(listings);
 
   useEffect(() => {
     loadListings();

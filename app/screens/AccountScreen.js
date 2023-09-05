@@ -28,6 +28,7 @@ const menuItems = [
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
   const [userData, setUserData] = useState([]);
+  const [filteredUserData, setFilteredUserData] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   const getUsers = async () => {
@@ -35,6 +36,8 @@ function AccountScreen({ navigation }) {
       const response = await fetch(endpointURL + "/users");
       const json = await response.json();
       setUserData(json);
+      const userDataArray = json.filter((item) => item.id === user.userId);
+      setFilteredUserData(userDataArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -46,6 +49,9 @@ function AccountScreen({ navigation }) {
     getUsers();
   }, []);
 
+  //console.log("==========---------");
+  //console.log(userDataArray[0].badge);
+  //console.log("==========---------");
   if (user.catdog == "Cat") {
     var imSource = require("../assets/catuser.png");
   } else {
@@ -59,7 +65,11 @@ function AccountScreen({ navigation }) {
         <ListItem
           title="Your Awarded Stars:"
           subTitle={
-            isLoading ? <Text>Loading...</Text> : userData[0].badge.toString()
+            isLoading || filteredUserData.length === 0 ? (
+              <Text>Loading...</Text>
+            ) : (
+              filteredUserData[0].badge.toString()
+            )
           }
           image={require("../assets/star.png")}
         />

@@ -30,10 +30,10 @@ function ListingsScreen() {
 
   const { user } = useAuth();
 
-  console.log(data);
+  //console.log(data);
 
   var newArray = data.filter((d) => d.user_id == user.userId);
-  console.log(newArray.length);
+  //console.log(newArray.length);
 
   return (
     <>

@@ -6,7 +6,7 @@ import colors from "../config/colors";
 
 function ListingDetailsScreen({ route }) {
   const listing = route.params;
-  console.log(listing);
+  //console.log(listing);
   return (
     <Screen>
       <ScrollView>
