@@ -50,21 +50,23 @@ function AppPicker({
       <Modal visible={modalVisible} animationType="slide">
         <Screen>
           <Button title="Close" onPress={() => setModalVisible(false)} />
-          <FlatList
-            data={items}
-            keyExtractor={(item) => item.value.toString()}
-            numColumns={numberOfColumns}
-            renderItem={({ item }) => (
-              <PickerItemComponent
-                label={item.label}
-                item={item}
-                onPress={() => {
-                  setModalVisible(false);
-                  onSelectItem(item);
-                }}
-              />
-            )}
-          />
+          <View style={styles.flatlist}>
+            <FlatList
+              data={items}
+              keyExtractor={(item) => item.value.toString()}
+              numColumns={numberOfColumns}
+              renderItem={({ item }) => (
+                <PickerItemComponent
+                  label={item.label}
+                  item={item}
+                  onPress={() => {
+                    setModalVisible(false);
+                    onSelectItem(item);
+                  }}
+                />
+              )}
+            />
+          </View>
         </Screen>
       </Modal>
     </>
@@ -86,6 +88,9 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  flatlist: {
+    paddingBottom: 70,
   },
 });
 export default AppPicker;

@@ -62,10 +62,28 @@ const ageCategories = [
 ];
 
 const raceCategories = [
-  { label: "Asian", value: 1 },
-  { label: "Black", value: 2 },
-  { label: "White", value: 3 },
-  { label: "Prefer Not to State", value: 4 },
+  { label: "Black/African American", value: 1 },
+  { label: "White", value: 2 },
+  { label: "Filipino", value: 3 },
+  { label: "Native Hawaiian", value: 4 },
+  { label: "Samoan or Tongan", value: 5 },
+  { label: "Guamanian or Chamorro", value: 6 },
+  { label: "Fijian", value: 7 },
+  { label: "Marshallese", value: 8 },
+  { label: "Other Pacific Islander", value: 9 },
+  { label: "Chinese", value: 10 },
+  { label: "Japanese", value: 11 },
+  { label: "Korean", value: 12 },
+  { label: "Vietnamese", value: 13 },
+  { label: "Indian (Southeast Asia)", value: 14 },
+  { label: "Other Asian", value: 15 },
+  { label: "American Indian (Native American) or Alaskan Native", value: 16 },
+  { label: "Portuguese", value: 17 },
+  { label: "Mexican", value: 18 },
+  { label: "Puerto Rican", value: 19 },
+  { label: "Other Latino/a or Hispanic", value: 20 },
+  { label: "Other", value: 21 },
+  { label: "Prefer Not to State", value: 22 },
 ];
 
 const preference = [

@@ -49,6 +49,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [recordData, setRecordData] = useState([]);
+  const [recordArray, setRecordArray] = useState([]);
 
   const getQuestions = async () => {
     try {
@@ -66,7 +67,8 @@ function QuestionnaireStep2Screen({ route, navigation }) {
     try {
       const rResponse = await fetch(endpointURL + "/records");
       const rJson = await rResponse.json();
-      setRecordData(rJson);
+      const myRecordArray = rJson.filter((d) => d.user_id == user.userId);
+      setRecordArray(myRecordArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -83,11 +85,10 @@ function QuestionnaireStep2Screen({ route, navigation }) {
 
   const { user } = useAuth();
 
-  var recordArray = recordData.filter((d) => d.user_id == user.userId);
   //console.log(recordArray.length);
   var lenRecordArray = recordArray.length;
-  var userBadge = Math.floor(lenRecordArray / 4);
-  //console.log(userBadge);
+  var userBadge = Math.floor(lenRecordArray / 3);
+  //console.log(lenRecordArray / 4);
 
   var hours = new Date().getHours();
   if (hours != null) {
@@ -110,27 +111,58 @@ function QuestionnaireStep2Screen({ route, navigation }) {
   const navPage = () => {
     navigation.navigate("Questionnaires");
   };
+  // const handleSubmit = async (listing, { resetForm }) => {
+  //   setProgress(0);
+  //   setUploadVisible(true);
+  //   const result = await listingsApi.addListing({ ...listing }, (progress) =>
+  //     setProgress(progress)
+  //   );
+
+  //   if (!result.ok) {
+  //     setUploadVisible(false);
+  //     return Alert.alert("Could not save the listing");
+  //   }
+  //   navPage();
+  //   resetForm();
+
+  //   // Reset the stack to the HomeScreen
+  //   navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 0,
+  //       routes: [{ name: "Account" }],
+  //     })
+  //   );
+  // };
+
   const handleSubmit = async (listing, { resetForm }) => {
     setProgress(0);
     setUploadVisible(true);
-    const result = await listingsApi.addListing({ ...listing }, (progress) =>
-      setProgress(progress)
-    );
 
-    if (!result.ok) {
-      setUploadVisible(false);
-      return Alert.alert("Could not save the listing");
-    }
-    navPage();
-    resetForm();
+    // Add an artificial delay of 2 seconds (adjust as needed)
+    setTimeout(async () => {
+      const result = await listingsApi.addListing({ ...listing }, (progress) =>
+        setProgress(progress)
+      );
 
-    // Reset the stack to the HomeScreen
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Account" }],
-      })
-    );
+      if (!result.ok) {
+        setUploadVisible(false);
+        Alert.alert("Could not save the listing");
+      } else {
+        // Delayed navigation
+        setTimeout(() => {
+          navPage();
+          resetForm();
+
+          // Reset the stack to the HomeScreen
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "Account" }],
+            })
+          );
+        }, 10); // Delayed navigation after 2 seconds
+      }
+    }, 2000); // Delayed submission after 2 seconds
   };
 
   return (
@@ -143,7 +175,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
         />
         <AppForm
           initialValues={{
-            cquestion: isLoading ? 404 : data[finalId].id,
+            cquestion: isLoading ? 404 : data[finalId]?.id,
             category: null,
             cuser: user.userId,
             substanceValue: step1Data.category["value"],
@@ -155,10 +187,10 @@ function QuestionnaireStep2Screen({ route, navigation }) {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {isLoading ? (
+          {isLoading || data.length === 0 ? (
             <Text>Loading...</Text>
           ) : (
-            <AppFormText name="hcquestion">{data[finalId].quest}</AppFormText>
+            <AppFormText name="hcquestion">{data[finalId]?.quest}</AppFormText>
           )}
 
           <Image

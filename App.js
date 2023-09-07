@@ -66,8 +66,8 @@ const scheduleNotifications = async () => {
 
     await scheduleNotificationAsync({
       content: {
-        title: "Your Notification Title",
-        body: "This is the body of your notification",
+        title: "Report Time!!!",
+        body: "Hi, would you mind take a second and log your current condition? Thanks!",
       },
       trigger: {
         date: triggerTime,
@@ -148,7 +148,7 @@ export default function App() {
       const payload = { userId: currentUser?.userId, timestamp, ...data };
 
       axios
-        .post("http:///192.168.86.30:9000/save-sensor-data", payload)
+        .post("http:///3.227.70.118:9000/save-sensor-data", payload)
         .then(() => {
           console.log("Sensor data sent to server");
         })
