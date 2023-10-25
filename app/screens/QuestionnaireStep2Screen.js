@@ -56,8 +56,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
   //console.log(step1Data);
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [recordData, setRecordData] = useState([]);
-  const [recordArray, setRecordArray] = useState([]);
+  const [badge, setBadge] = useState([]);
 
   const getQuestions = async () => {
     try {
@@ -88,7 +87,9 @@ function QuestionnaireStep2Screen({ route, navigation }) {
       });
       const rJson = await rResponse.json();
       const myRecordArray = rJson.filter((d) => d.user_id == user.userId);
-      setRecordArray(myRecordArray);
+      var lenRecordArray = myRecordArray.length;
+      var userBadge = Math.floor(lenRecordArray / 4);
+      setBadge(userBadge);
     } catch (error) {
       console.error(error);
     } finally {
@@ -107,11 +108,6 @@ function QuestionnaireStep2Screen({ route, navigation }) {
   //console.log(step1Data.category.map((item) => item.value));
 
   const { user } = useAuth();
-
-  //console.log(recordArray.length);
-  var lenRecordArray = recordArray.length;
-  var userBadge = Math.floor(lenRecordArray / 4);
-  //console.log(lenRecordArray / 4);
 
   var hours = new Date().getHours();
   if (hours != null) {
@@ -205,7 +201,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
             substanceLabel: step1Data.category.map((item) => item.label),
             cuseValue: step1Data.craveuse["value"],
             cuseLabel: step1Data.craveuse["label"],
-            userBadge: userBadge,
+            userBadge: badge,
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}

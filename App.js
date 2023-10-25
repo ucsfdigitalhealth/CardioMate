@@ -109,7 +109,7 @@ export default function App() {
       const payload = { userId: currentUser?.userId, timestamp, ...data };
 
       axios
-        .post("http://168.105.244.46:9000/save-sensor-data", payload)
+        .post("http://192.168.86.30:9000/save-sensor-data", payload)
         .then(() => {
           console.log("Sensor data sent to server");
         })
