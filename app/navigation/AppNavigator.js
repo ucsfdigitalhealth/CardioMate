@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
@@ -11,15 +11,31 @@ import expoPushTokensApi from "../api/expoPushTokens";
 import navigation from "./rootNavigation";
 import colors from "../config/colors";
 import QuestionnaireStep2Screen from "../screens/QuestionnaireStep2Screen";
+import { scheduleNotifications } from "../components/NotificationSender";
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
+  const [initialRoute, setInitialRoute] = useState();
   useEffect(() => {
     registerForPushNotifications();
-    Notifications.addPushTokenListener((notification) =>
-      navigation.navigate("My Account")
-    );
+    Notifications.addPushTokenListener((notification) => {
+      navigation.navigate("My Questionnaire");
+    });
+
+    ////////////////////////////////////////////
+    const notificationListener =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        navigation.navigate("My Questionnaire");
+        setInitialRoute("Questionnaires");
+      });
+    ///////////////////////////////////////////
+
+    scheduleNotifications();
+
+    return () => {
+      notificationListener.remove();
+    };
   }, []);
 
   const registerForPushNotifications = async () => {
@@ -37,17 +53,19 @@ const AppNavigator = () => {
       screenOptions={{
         tabBarShowLabel: false,
       }}
+      initialRouteName={initialRoute}
     >
       <Tab.Screen
         name="My Account"
         component={RecordNavigator}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="badge-account-horizontal-outline"
-              color={color}
-              size={35}
+          tabBarButton: () => (
+            <NewListingButton
+              onPress={() => navigation.navigate("My Account")}
             />
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
         }}
       />
@@ -55,13 +73,12 @@ const AppNavigator = () => {
         name="Questionnaires"
         component={FeedNavigator}
         options={({ navigation }) => ({
-          tabBarButton: () => (
-            <NewListingButton
-              onPress={() => navigation.navigate("Questionnaires")}
-            />
-          ),
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="format-list-text"
+              color={color}
+              size={45}
+            />
           ),
           headerShown: false,
         })}

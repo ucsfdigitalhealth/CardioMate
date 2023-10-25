@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     padding: 20,
     width: "100%",
+    marginBottom: 20,
   },
   logo: {
     width: 200,

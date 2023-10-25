@@ -14,9 +14,9 @@ import {
   AppFormField,
   SubmitButton,
 } from "../components/forms";
-import AppFormPicker from "../components/forms/AppFormPicker";
 import useApi from "../hooks/useApi";
 import AppActivityIndicator from "../components/AppActivityIndicator";
+import AppFormPickerSingle from "../components/forms/AppFormPickerSingle";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Given Name"),
@@ -161,25 +161,25 @@ function RegisterScreen(props) {
               textContentType="emailAddress"
               name="email"
             />
-            <AppFormPicker
+            <AppFormPickerSingle
               items={genCategories}
               placeholder="Gender"
               icon="account-group"
               name="genCategory"
             />
-            <AppFormPicker
+            <AppFormPickerSingle
               items={ageCategories}
               placeholder="Age"
               icon="account-child"
               name="ageCategory"
             />
-            <AppFormPicker
+            <AppFormPickerSingle
               items={raceCategories}
               placeholder="Race"
               icon="account-child"
               name="raceCategory"
             />
-            <AppFormPicker
+            <AppFormPickerSingle
               items={preference}
               placeholder="Naming Preference"
               icon="account-child"

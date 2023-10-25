@@ -8,6 +8,9 @@ import MessagesScreen from "../screens/MessagesScreen";
 import MessageDetailsScreen from "../screens/MessageDetailsScreen";
 import DownloadScreen from "../screens/DownloadScreen";
 import QuestionnaireStep2Screen from "../screens/QuestionnaireStep2Screen";
+import StarsScreen from "../screens/StarsScreen";
+import IdFinderScreen from "../screens/IdFinderScreen";
+import IdFinderStep2Screen from "../screens/IdFinderStep2Screen";
 
 const Stack = createStackNavigator();
 
@@ -19,18 +22,17 @@ const RecordNavigator = () => (
       options={{ headerShown: false }}
     />
     <Stack.Screen name="Records" component={RecordScreen} />
-    <Stack.Screen name="Downloads" component={DownloadScreen} />
-    <Stack.Screen
-      name="My Questionnaire"
-      component={QuestionnaireScreen}
-      options={{ headerShown: false }}
-    />
+    <Stack.Screen name="Stars" component={StarsScreen} />
+    <Stack.Screen name="FitBit Connection" component={DownloadScreen} />
+    <Stack.Screen name="ID Finder" component={IdFinderScreen} />
+    <Stack.Screen name="My Questionnaire" component={QuestionnaireScreen} />
     <Stack.Screen name="My Messages" component={MessagesScreen} />
     <Stack.Screen name="Message Details" component={MessageDetailsScreen} />
     <Stack.Screen
-      name="Questionnaire Step2"
+      name="One More Question!"
       component={QuestionnaireStep2Screen}
     />
+    <Stack.Screen name="User Info Details" component={IdFinderStep2Screen} />
   </Stack.Navigator>
 );
 

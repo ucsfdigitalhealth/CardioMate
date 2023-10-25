@@ -1,20 +1,28 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
-//import Icon from "./Icon";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-function CategoryPickerItemColumn({ item, onPress }) {
+function CategoryPickerItemColumn({ item, onPress, selected }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
-        {/* <Icon
-          backgroundColor={item.backgroundColor}
-          name={item.icon}
-          size={120}
-        /> */}
-        <Image style={styles.fruitLogo} source={item.icon} />
-        <AppText style={styles.label}>{item.label}</AppText>
+        <View
+          style={[
+            styles.imageContainer,
+            selected && styles.selectedImageContainer, // Apply highlight to the image container when selected
+          ]}
+        >
+          <Image style={styles.fruitLogo} source={item.icon} />
+        </View>
+        <AppText
+          style={[
+            styles.label,
+            selected && styles.selectedLabel, // Apply a different style to the label when selected
+          ]}
+        >
+          {item.label}
+        </AppText>
       </TouchableOpacity>
     </View>
   );
@@ -32,14 +40,20 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
+  selectedLabel: {
+    color: colors.primary, // Define your selected item label color
+  },
+  imageContainer: {
+    borderRadius: 30,
+    overflow: "hidden",
+  },
+  selectedImageContainer: {
+    backgroundColor: colors.primary, // Define your selected item background color for the image container
+  },
   fruitLogo: {
     width: "100%",
     height: 150,
     aspectRatio: 1,
-    borderRadius: 30,
-    overlayColor: colors.bgcolor,
-    overflow: "hidden",
-    marginVertical: 15,
   },
 });
 

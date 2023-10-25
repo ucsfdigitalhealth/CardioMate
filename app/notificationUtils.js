@@ -1,19 +1,13 @@
 import * as Notifications from "expo-notifications";
+import expoPushTokensApi from "./api/expoPushTokens";
 
 export const registerForPushNotificationsAsync = async () => {
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
-
-  if (existingStatus !== "granted") {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
+  try {
+    const permission = await Notifications.requestPermissionsAsync();
+    if (!permission.granted) return;
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    expoPushTokensApi.register(token);
+  } catch (error) {
+    console.log("Error getting a push token", error);
   }
-
-  if (finalStatus !== "granted") {
-    console.log("Notification permissions denied");
-    return;
-  }
-
-  const token = (await Notifications.getExpoPushTokenAsync()).data;
-  console.log("Notification token:", token);
 };

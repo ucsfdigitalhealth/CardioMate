@@ -14,10 +14,15 @@ import CategoryPickerItem from "../components/CategoryPickerItem";
 import routes from "../navigation/routes";
 import PickerItem from "../components/PickerItem";
 import CategoryPickerItemColumn from "../components/CategoryPickerItemColumn";
+import authStorage from "../auth/storage";
+import AppFormField from "../components/forms";
+import AppFormPickerSingle from "../components/forms/AppFormPickerSingle";
 
 const validationSchema = Yup.object().shape({
-  //images: Yup.array().min(1, "Please select at least one image."),
-  category: Yup.object().required().nullable().label("Category"),
+  category: Yup.array()
+    .required()
+    .min(1, "Please select at least one category."),
+  craveuse: Yup.object().required().nullable().label("Your input"),
 });
 
 const fruits = [
@@ -116,7 +121,14 @@ function QuestionnaireScreen({ navigation }) {
 
   const getQuestions = async () => {
     try {
-      const response = await fetch(endpointURL + "/questions");
+      const token = await authStorage.getToken();
+      const response = await fetch(endpointURL + "/questions", {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(token);
       const json = await response.json();
       setData(json);
     } catch (error) {
@@ -134,7 +146,7 @@ function QuestionnaireScreen({ navigation }) {
   //var hours = new Date().getHours();
   //console.log(user);
   if (user.preference == "Fruit") {
-    var finalId = 0;
+    var finalId = 4;
     var imSource = require("../assets/animations/fruits.png");
     var finalCategory = fruits;
     var pickerType = CategoryPickerItemColumn;
@@ -144,7 +156,7 @@ function QuestionnaireScreen({ navigation }) {
     var finalId = 0;
     var imSource = require("../assets/animations/selection.png");
     var finalCategory = substanceTypes;
-    var pickerType = PickerItem;
+    var pickerType = CategoryPickerItem;
     var columnNum = 1;
     var placeHolder = "Substance Types";
   }
@@ -170,14 +182,19 @@ function QuestionnaireScreen({ navigation }) {
         <AppForm
           initialValues={{
             cquestion: isLoading ? 404 : data[finalId].id,
-            category: null,
+            category: [], // Initialize as an empty array for multiple selections
+            craveuse: null,
             cuser: user.userId,
+            name: null,
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           {isLoading ? (
-            <Text>Loading...</Text>
+            <Image
+              style={styles.loading}
+              source={require("../assets/animations/loading_gif_s.gif")}
+            />
           ) : (
             <AppFormText name="hcquestion">{data[finalId].quest}</AppFormText>
           )}
@@ -189,7 +206,7 @@ function QuestionnaireScreen({ navigation }) {
               borderRadius: 30,
               overlayColor: colors.bgcolor,
               overflow: "hidden",
-              marginVertical: 15,
+              marginTop: 15,
             }}
             source={imSource}
           />
@@ -198,12 +215,12 @@ function QuestionnaireScreen({ navigation }) {
             items={finalCategory}
             placeholder={placeHolder}
             icon="paw"
-            name="category"
+            name="category" // Make sure this matches the field name in your form
             numberOfColumns={columnNum}
             PickerItemComponent={pickerType}
           />
 
-          <AppFormPicker
+          <AppFormPickerSingle
             items={craveUse}
             placeholder="Crave/Use"
             icon="paw"
@@ -223,5 +240,8 @@ export default QuestionnaireScreen;
 const styles = StyleSheet.create({
   quScreen: {
     padding: 10,
+  },
+  loading: {
+    alignSelf: "center",
   },
 });

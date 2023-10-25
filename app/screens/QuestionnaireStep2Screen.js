@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 
 import { AppFormText, AppForm, SubmitButton } from "../components/forms";
-import AppFormPicker from "../components/forms/AppFormPicker";
 import { ScrollView, StyleSheet, Alert, Image, Text } from "react-native";
 import listingsApi from "../api/listings";
 import Screen from "../components/Screen";
@@ -13,20 +12,23 @@ import endpointURL from "../api/serverPoint";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import PickerItem from "../components/PickerItem";
 import { CommonActions, useNavigation } from "@react-navigation/native";
+import authStorage from "../auth/storage";
+import AppFormPickerSingle from "../components/forms/AppFormPickerSingle";
 
 const validationSchema = Yup.object().shape({
   //images: Yup.array().min(1, "Please select at least one image."),
-  category: Yup.object().required().nullable().label("Category"),
+  category: Yup.object().required().nullable().label("Your input"),
 });
 
 const use = [
-  { label: "Less than 1 hour ago", value: 1 },
-  { label: "1-2 hours ago", value: 2 },
-  { label: "2-4 hours ago", value: 3 },
-  { label: "4-6 hours ago", value: 4 },
-  { label: "6-8 hours ago", value: 5 },
-  { label: "8-10 hours ago", value: 6 },
-  { label: "More than 10 hours ago", value: 7 },
+  { label: "Less than 30 minutes ago", value: 1 },
+  { label: "About 1 hour ago", value: 2 },
+  { label: "1-2 hours ago", value: 3 },
+  { label: "2-4 hours ago", value: 4 },
+  { label: "4-6 hours ago", value: 5 },
+  { label: "6-8 hours ago", value: 6 },
+  { label: "8-10 hours ago", value: 7 },
+  { label: "More than 10 hours ago", value: 8 },
 ];
 
 const crave = [
@@ -43,6 +45,12 @@ const crave = [
   { label: "10", value: 10 },
 ];
 
+const confirmU = [
+  { label: "Not Craved", value: 0 },
+  { label: "Not Used", value: 1 },
+  { label: "Not Craved/Used", value: 2 },
+];
+
 function QuestionnaireStep2Screen({ route, navigation }) {
   const { step1Data } = route.params;
   //console.log(step1Data);
@@ -53,7 +61,13 @@ function QuestionnaireStep2Screen({ route, navigation }) {
 
   const getQuestions = async () => {
     try {
-      const response = await fetch(endpointURL + "/questions");
+      const token = await authStorage.getToken();
+      const response = await fetch(endpointURL + "/questions", {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      });
       const json = await response.json();
       setData(json);
     } catch (error) {
@@ -65,7 +79,13 @@ function QuestionnaireStep2Screen({ route, navigation }) {
 
   const getRecords = async () => {
     try {
-      const rResponse = await fetch(endpointURL + "/records");
+      const token = await authStorage.getToken();
+      const rResponse = await fetch(endpointURL + "/records", {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      });
       const rJson = await rResponse.json();
       const myRecordArray = rJson.filter((d) => d.user_id == user.userId);
       setRecordArray(myRecordArray);
@@ -80,14 +100,17 @@ function QuestionnaireStep2Screen({ route, navigation }) {
     getQuestions();
     getRecords();
   }, []);
+  // console.log("88888888888888888888888");
+  // console.log(step1Data);
+  // console.log("88888888888888888888888");
 
-  //console.log(step1Data);
+  //console.log(step1Data.category.map((item) => item.value));
 
   const { user } = useAuth();
 
   //console.log(recordArray.length);
   var lenRecordArray = recordArray.length;
-  var userBadge = Math.floor(lenRecordArray / 3);
+  var userBadge = Math.floor(lenRecordArray / 4);
   //console.log(lenRecordArray / 4);
 
   var hours = new Date().getHours();
@@ -100,7 +123,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
       var finalSelect = crave;
     } else {
       var finalId = 3;
-      var finalSelect = crave;
+      var finalSelect = confirmU;
     }
     var imSource = require("../assets/animations/thinking.png");
   }
@@ -160,9 +183,9 @@ function QuestionnaireStep2Screen({ route, navigation }) {
               routes: [{ name: "Account" }],
             })
           );
-        }, 10); // Delayed navigation after 2 seconds
+        }, 2000); // Delayed navigation after 2 seconds (adjust as needed)
       }
-    }, 2000); // Delayed submission after 2 seconds
+    }, 2000); // Delayed submission after 2 seconds (adjust as needed)
   };
 
   return (
@@ -178,8 +201,8 @@ function QuestionnaireStep2Screen({ route, navigation }) {
             cquestion: isLoading ? 404 : data[finalId]?.id,
             category: null,
             cuser: user.userId,
-            substanceValue: step1Data.category["value"],
-            substanceLabel: step1Data.category["label"],
+            substanceValue: step1Data.category.map((item) => item.value),
+            substanceLabel: step1Data.category.map((item) => item.label),
             cuseValue: step1Data.craveuse["value"],
             cuseLabel: step1Data.craveuse["label"],
             userBadge: userBadge,
@@ -188,7 +211,10 @@ function QuestionnaireStep2Screen({ route, navigation }) {
           validationSchema={validationSchema}
         >
           {isLoading || data.length === 0 ? (
-            <Text>Loading...</Text>
+            <Image
+              style={styles.loading}
+              source={require("../assets/animations/loading_gif_s.gif")}
+            />
           ) : (
             <AppFormText name="hcquestion">{data[finalId]?.quest}</AppFormText>
           )}
@@ -205,7 +231,7 @@ function QuestionnaireStep2Screen({ route, navigation }) {
             source={imSource}
           />
 
-          <AppFormPicker
+          <AppFormPickerSingle
             items={finalSelect}
             placeholder="Answer"
             icon="paw"
@@ -224,5 +250,8 @@ export default QuestionnaireStep2Screen;
 const styles = StyleSheet.create({
   quScreen: {
     padding: 10,
+  },
+  loading: {
+    alignSelf: "center",
   },
 });

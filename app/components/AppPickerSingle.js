@@ -15,30 +15,16 @@ import Screen from "./Screen";
 import PickerItem from "./PickerItem";
 import colors from "../config/colors";
 
-function AppPicker({
+function AppPickerSingle({
   icon,
   items,
   numberOfColumns = 1,
   onSelectItem,
-  onRemoveItem, // Include onRemoveItem function
   PickerItemComponent = PickerItem,
   placeholder,
-  selectedItems = [],
+  selectedItem,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const handleSelect = (item) => {
-    if (selectedItems.some((selected) => selected.value === item.value)) {
-      onRemoveItem(item); // Call the onRemoveItem function
-    } else {
-      onSelectItem(item);
-    }
-  };
-
-  console.log("++++++++++++++++++++++++++ AppPicker");
-  console.log(selectedItems);
-  console.log("++++++++++++++++++++++++++ AppPicker");
-
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
@@ -52,9 +38,7 @@ function AppPicker({
             />
           )}
           <AppText style={styles.text}>
-            {selectedItems.length
-              ? selectedItems.map((item) => item.label).join(", ")
-              : placeholder}
+            {selectedItem ? selectedItem.label : placeholder}
           </AppText>
           <MaterialCommunityIcons
             name="chevron-down"
@@ -76,11 +60,9 @@ function AppPicker({
                   label={item.label}
                   item={item}
                   onPress={() => {
-                    handleSelect(item);
+                    setModalVisible(false);
+                    onSelectItem(item);
                   }}
-                  selected={selectedItems.some(
-                    (selectedItem) => selectedItem.value === item.value
-                  )}
                 />
               )}
             />
@@ -111,5 +93,4 @@ const styles = StyleSheet.create({
     paddingBottom: 70,
   },
 });
-
-export default AppPicker;
+export default AppPickerSingle;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text } from "react-native";
+import { FlatList, StyleSheet, Text, Image } from "react-native";
 import moment from "moment";
 
 import Screen from "../components/Screen";
@@ -8,13 +8,20 @@ import colors from "../config/colors";
 import useAuth from "../auth/useAuth";
 import AppRecordText from "../components/AppRecordText";
 import endpointURL from "../api/serverPoint";
+import authStorage from "../auth/storage";
 
 function ListingsScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const getRecords = async () => {
     try {
-      const response = await fetch(endpointURL + "/records");
+      const token = await authStorage.getToken();
+      const response = await fetch(endpointURL + "/records", {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      });
       const json = await response.json();
       setData(json);
     } catch (error) {
@@ -39,7 +46,10 @@ function ListingsScreen() {
     <>
       <Screen style={styles.screen}>
         {isLoading ? (
-          <Text>Loading...</Text>
+          <Image
+            style={styles.loading}
+            source={require("../assets/animations/loading_gif.gif")}
+          />
         ) : (
           <FlatList
             data={newArray}
@@ -66,6 +76,9 @@ const styles = StyleSheet.create({
   logodescColor: {
     color: colors.black,
     fontWeight: "bold",
+  },
+  loading: {
+    alignSelf: "center",
   },
 });
 

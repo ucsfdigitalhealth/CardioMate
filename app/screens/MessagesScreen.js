@@ -7,23 +7,40 @@ import useAuth from "../auth/useAuth";
 import routes from "../navigation/routes";
 import endpointURL from "../api/serverPoint";
 
+import authStorage from "../auth/storage";
+
 function MessagesScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const getRecords = async () => {
+  const [error, setError] = useState(null);
+
+  const getGMessages = async () => {
     try {
-      const response = await fetch(endpointURL + "/gmessages");
+      const token = await authStorage.getToken();
+
+      const response = await fetch(endpointURL + "/gmessages", {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const json = await response.json();
       setData(json);
+      setLoading(false);
     } catch (error) {
       console.error(error);
-    } finally {
+      setError(error.message);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getRecords();
+    getGMessages();
   }, []);
 
   const { user } = useAuth();

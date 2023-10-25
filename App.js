@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
-import { Permissions } from "expo-permissions";
 import { registerForPushNotificationsAsync } from "./app/notificationUtils";
-import { scheduleNotificationAsync } from "expo-notifications";
+import { Linking } from "react-native";
 
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import NavigationTheme from "./app/navigation/NavigationTheme";
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthContext from "./app/auth/context";
 import authStorage from "./app/auth/storage";
-import { navigationRef } from "./app/navigation/rootNavigation";
+import navigation, { navigationRef } from "./app/navigation/rootNavigation";
 import { Accelerometer, Gyroscope } from "expo-sensors";
 import axios from "axios";
 
@@ -43,43 +42,6 @@ async function unregisterBackgroundFetchAsync() {
 
 ///
 
-/// Notification
-
-const scheduleNotifications = async () => {
-  const notificationTimes = [
-    { hour: 9, minute: 0 },
-    { hour: 13, minute: 0 },
-    { hour: 17, minute: 0 },
-    { hour: 21, minute: 0 },
-  ];
-
-  const now = new Date();
-
-  for (const time of notificationTimes) {
-    const triggerTime = new Date(now);
-    triggerTime.setHours(time.hour, time.minute, 0, 0);
-
-    if (triggerTime <= now) {
-      // If the trigger time is in the past, schedule for the next day
-      triggerTime.setDate(triggerTime.getDate() + 1);
-    }
-
-    await scheduleNotificationAsync({
-      content: {
-        title: "Report Time!!!",
-        body: "Hi, would you mind take a second and log your current condition? Thanks!",
-      },
-      trigger: {
-        date: triggerTime,
-        repeats: true,
-        seconds: 0,
-      },
-    });
-  }
-};
-
-///
-
 export default function App() {
   const [user, setUser] = useState();
   const [isReady, setIsReady] = useState(false);
@@ -102,8 +64,7 @@ export default function App() {
     }
     prepare();
 
-    registerForPushNotificationsAsync(); // Request permissions and initialize notifications
-    scheduleNotifications();
+    registerForPushNotificationsAsync();
 
     let accelerometerSubscription;
     let gyroscopeSubscription;
@@ -148,7 +109,7 @@ export default function App() {
       const payload = { userId: currentUser?.userId, timestamp, ...data };
 
       axios
-        .post("http:///3.227.70.118:9000/save-sensor-data", payload)
+        .post("http://168.105.244.46:9000/save-sensor-data", payload)
         .then(() => {
           console.log("Sensor data sent to server");
         })
