@@ -1,230 +1,102 @@
-import React, { useState, useEffect } from "react";
+// MainQuestionnaireScreen.js
+
+import React from "react";
 import * as Yup from "yup";
 
 import { AppFormText, AppForm, SubmitButton } from "../components/forms";
 import AppFormPicker from "../components/forms/AppFormPicker";
-import { ScrollView, StyleSheet, Alert, Image, Text } from "react-native";
-import listingsApi from "../api/listings";
+import { ScrollView, StyleSheet } from "react-native";
 import Screen from "../components/Screen";
-import UploadScreen from "./UploadScreen";
-import useAuth from "../auth/useAuth";
-import colors from "../config/colors";
-import endpointURL from "../api/serverPoint";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import routes from "../navigation/routes";
-import PickerItem from "../components/PickerItem";
-import CategoryPickerItemColumn from "../components/CategoryPickerItemColumn";
-import authStorage from "../auth/storage";
-import AppFormField from "../components/forms";
 import AppFormPickerSingle from "../components/forms/AppFormPickerSingle";
 
 const validationSchema = Yup.object().shape({
-  category: Yup.array()
-    .required()
-    .min(1, "Please select at least one category."),
-  craveuse: Yup.object().required().nullable().label("Your input"),
+  interaction: Yup.object().required().label("Interaction"),
+  physicalDiscomfort: Yup.object().required().label("Physical Discomfort"),
+  environment: Yup.object().required().label("Environment"),
+  medication: Yup.object().required().label("Medication"),
 });
 
-const fruits = [
-  {
-    label: "None",
-    value: 1,
-    backgroundColor: "red",
-    icon: require("../assets/animations/none.png"),
-  },
-  {
-    label: "Melon",
-    value: 2,
-    backgroundColor: "green",
-    icon: require("../assets/animations/melon.png"),
-  },
-  {
-    label: "Almond",
-    value: 3,
-    backgroundColor: "green",
-    icon: require("../assets/animations/almond.png"),
-  },
-  {
-    label: "Carrot",
-    value: 4,
-    backgroundColor: "green",
-    icon: require("../assets/animations/carrot.png"),
-  },
-  {
-    label: "Orange",
-    value: 5,
-    backgroundColor: "green",
-    icon: require("../assets/animations/orange.png"),
-  },
-  {
-    label: "Coconut",
-    value: 6,
-    backgroundColor: "green",
-    icon: require("../assets/animations/coconut.png"),
-  },
-  {
-    label: "Strawberry",
-    value: 7,
-    backgroundColor: "green",
-    icon: require("../assets/animations/strawberry.png"),
-  },
-  {
-    label: "Nectarine",
-    value: 8,
-    backgroundColor: "green",
-    icon: require("../assets/animations/nectarine.png"),
-  },
-  {
-    label: "Others",
-    value: 9,
-    backgroundColor: "green",
-    icon: require("../assets/animations/others.png"),
-  },
+const yesNoOptions = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" },
 ];
 
-const substanceTypes = [
-  { label: "None", value: 1 },
-  { label: "Methamphetamine", value: 2 },
-  { label: "Alcohol", value: 3 },
-  { label: "Cannabis (marijuana, pakalolo)", value: 4 },
-  { label: "Opioid (e.g., heroin, fentanyl, oxycodone)", value: 5 },
-  { label: "Cocaine", value: 6 },
-  { label: "Sedative/benzodiazepine", value: 7 },
-  { label: "Nicotine (cigarettes or e-cigarettes)", value: 8 },
-  { label: "Others", value: 9 },
-];
-
-const craveUse = [
-  {
-    label: "Crave",
-    value: 1,
-    backgroundColor: "red",
-    icon: require("../assets/animations/crave.png"),
-  },
-  {
-    label: "Use",
-    value: 2,
-    backgroundColor: "green",
-    icon: require("../assets/animations/use.png"),
-  },
-  {
-    label: "None",
-    value: 3,
-    backgroundColor: "green",
-    icon: require("../assets/animations/none.png"),
-  },
+const environmentOptions = [
+  { label: "Quiet", value: "quiet" },
+  { label: "Noisy", value: "noisy" },
+  { label: "Comfortable", value: "comfortable" },
+  { label: "Stressful", value: "stressful" },
+  { label: "Others", value: "others" },
 ];
 
 function QuestionnaireScreen({ navigation }) {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-
-  const getQuestions = async () => {
-    try {
-      const token = await authStorage.getToken();
-      const response = await fetch(endpointURL + "/questions", {
-        headers: {
-          "x-auth-token": token,
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(token);
-      const json = await response.json();
-      setData(json);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getQuestions();
-  }, []);
-
-  const { user } = useAuth();
-  //var hours = new Date().getHours();
-  //console.log(user);
-  if (user.preference == "Fruit") {
-    var finalId = 4;
-    var imSource = require("../assets/animations/fruits.png");
-    var finalCategory = fruits;
-    var pickerType = CategoryPickerItemColumn;
-    var columnNum = 2;
-    var placeHolder = "Fruit Types";
-  } else {
-    var finalId = 0;
-    var imSource = require("../assets/animations/selection.png");
-    var finalCategory = substanceTypes;
-    var pickerType = CategoryPickerItem;
-    var columnNum = 1;
-    var placeHolder = "Substance Types";
-  }
-
-  const [uploadVisible, setUploadVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  // const navPage = () => {
-  //   navigation.navigate("QuestionnaireStep2", { step1Data: listing });
-  // };
   const handleSubmit = async (listing) => {
-    navigation.navigate(routes.QUESTIONNAIRE_STEP2, { step1Data: listing });
+    // Filter out the 'undefined' key from the listing object
+    const cleanedListing = Object.keys(listing).reduce((acc, key) => {
+      if (key !== "undefined") {
+        acc[key] = listing[key];
+      }
+      return acc;
+    }, {});
+
+    navigation.navigate(routes.QUESTIONNAIRE_STEP1, {
+      mainAnswers: cleanedListing,
+    });
   };
 
   return (
-    <Screen style={styles.quScreen}>
+    <Screen style={styles.screen}>
       <ScrollView>
-        <UploadScreen
-          onDone={() => setUploadVisible(false)}
-          progress={progress}
-          visible={uploadVisible}
-        />
         <AppForm
           initialValues={{
-            cquestion: isLoading ? 404 : data[finalId].id,
-            category: [], // Initialize as an empty array for multiple selections
-            craveuse: null,
-            cuser: user.userId,
-            name: null,
+            interaction: "",
+            physicalDiscomfort: "",
+            environment: "",
+            medication: "",
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {isLoading ? (
-            <Image
-              style={styles.loading}
-              source={require("../assets/animations/loading_gif_s.gif")}
-            />
-          ) : (
-            <AppFormText name="hcquestion">{data[finalId].quest}</AppFormText>
-          )}
-
-          <Image
-            style={{
-              width: "100%",
-              height: 370,
-              borderRadius: 30,
-              overlayColor: colors.bgcolor,
-              overflow: "hidden",
-              marginTop: 15,
-            }}
-            source={imSource}
-          />
-
-          <AppFormPicker
-            items={finalCategory}
-            placeholder={placeHolder}
-            icon="paw"
-            name="category" // Make sure this matches the field name in your form
-            numberOfColumns={columnNum}
-            PickerItemComponent={pickerType}
-          />
-
+          <AppFormText>Have you interacted with anyone?</AppFormText>
           <AppFormPickerSingle
-            items={craveUse}
-            placeholder="Crave/Use"
+            name="interaction"
+            items={yesNoOptions}
+            placeholder="Select"
             icon="paw"
-            name="craveuse"
+            numberOfColumns={1}
+            PickerItemComponent={CategoryPickerItem}
+          />
+
+          <AppFormText>
+            Are you currently experiencing any physical discomfort or symptoms?
+          </AppFormText>
+          <AppFormPickerSingle
+            name="physicalDiscomfort"
+            items={yesNoOptions}
+            placeholder="Select"
+            icon="paw"
+            numberOfColumns={1}
+            PickerItemComponent={CategoryPickerItem}
+          />
+
+          <AppFormText>Describe your current environment.</AppFormText>
+          <AppFormPickerSingle
+            name="environment"
+            items={environmentOptions}
+            placeholder="Select"
+            icon="paw"
+            numberOfColumns={1}
+            PickerItemComponent={CategoryPickerItem}
+          />
+
+          <AppFormText>Have you used any medications?</AppFormText>
+          <AppFormPickerSingle
+            name="medication"
+            items={yesNoOptions}
+            placeholder="Select"
+            icon="paw"
             numberOfColumns={1}
             PickerItemComponent={CategoryPickerItem}
           />
@@ -235,13 +107,11 @@ function QuestionnaireScreen({ navigation }) {
     </Screen>
   );
 }
+
 export default QuestionnaireScreen;
 
 const styles = StyleSheet.create({
-  quScreen: {
+  screen: {
     padding: 10,
-  },
-  loading: {
-    alignSelf: "center",
   },
 });

@@ -12,9 +12,19 @@ export const scheduleNotifications = async () => {
 
   if (existingChannels.length === 0) {
     const notificationTimes = [
+      { hour: 8, minute: 0 },
       { hour: 9, minute: 0 },
+      { hour: 10, minute: 0 },
+      { hour: 11, minute: 0 },
+      { hour: 12, minute: 0 },
       { hour: 13, minute: 0 },
+      { hour: 14, minute: 0 },
+      { hour: 15, minute: 0 },
+      { hour: 16, minute: 0 },
       { hour: 17, minute: 0 },
+      { hour: 18, minute: 0 },
+      { hour: 19, minute: 0 },
+      { hour: 20, minute: 0 },
       { hour: 21, minute: 0 },
     ];
 
@@ -38,7 +48,7 @@ export const scheduleNotifications = async () => {
         identifier: notificationId, // Use the unique identifier
         content: {
           title: "Time to Check in!",
-          body: "Hi, would you mind taking a second to log your current condition? Thanks!",
+          body: "Hi, would you mind taking a second to measure your blood pressure and also log your current stress level? Thanks!",
           sound: "default", // "default" for the default notification sound
           vibrate: [1000, 500, 1000], // Vibrate for 1 second, pause for 0.5 seconds, vibrate for 1 second
           data: {

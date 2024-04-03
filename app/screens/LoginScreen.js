@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Image, StyleSheet } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import * as Yup from "yup";
 import colors from "../config/colors";
+import AppButton from "../components/AppButton";
 import Screen from "../components/Screen";
+import routes from "../navigation/routes";
 
 import {
   CustomErrorMessage,
@@ -19,7 +28,7 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().label("Password"),
 });
 
-function LoginScreen(props) {
+function LoginScreen({ navigation }, props) {
   const { logIn } = useAuth();
   const [loginFailed, setLoginFailed] = useState(false);
 
@@ -31,37 +40,49 @@ function LoginScreen(props) {
   };
   return (
     <Screen style={styles.screen}>
-      <Image style={styles.logo} source={require("../assets/logo.png")} />
-
-      <AppForm
-        initialValues={{ email: "", password: "" }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.keyboardAvoidingView}
+        extraScrollHeight={100}
       >
-        <CustomErrorMessage
-          error="Invalid email and/or password."
-          visible={loginFailed}
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="email"
-          keyboardType="email-address"
-          placeholder="Email"
-          textContentType="emailAddress"
-          name="email"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          placeholder="Password"
-          secureTextEntry={true}
-          textContentType="password"
-          name="password"
-        />
-        <SubmitButton title="Login" />
-      </AppForm>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <Image style={styles.logo} source={require("../assets/logo.png")} />
+          <AppForm
+            initialValues={{ email: "", password: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <CustomErrorMessage
+              error="Invalid email and/or password."
+              visible={loginFailed}
+            />
+            <AppFormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              keyboardType="email-address"
+              placeholder="Email"
+              textContentType="emailAddress"
+              name="email"
+            />
+            <AppFormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              placeholder="Password"
+              secureTextEntry={true}
+              textContentType="password"
+              name="password"
+            />
+            <SubmitButton title="Login" />
+          </AppForm>
+          <AppButton
+            title="Register"
+            color="secondary"
+            onPress={() => navigation.navigate(routes.REGISTER)}
+          />
+        </ScrollView>
+      </KeyboardAwareScrollView>
     </Screen>
   );
 }
@@ -71,11 +92,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 200,
-    height: 120,
+    width: 256,
+    height: 300,
     alignSelf: "center",
-    marginTop: 50,
-    marginBottom: 20,
+    marginTop: 60,
+    marginBottom: 80,
   },
   error: {
     color: colors.error,

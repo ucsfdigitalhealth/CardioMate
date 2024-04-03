@@ -4,15 +4,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
 import AppText from "./AppText";
+import fonts from "../config/fonts";
 
-function ListItem({ title, subTitle, image, IconComponent, onPress }) {
+function ListItem({
+  title,
+  subTitle,
+  image,
+  IconComponent,
+  onPress,
+  titleStyle,
+}) {
   return (
-    <TouchableHighlight underlayColor={colors.lightGray} onPress={onPress}>
+    <TouchableHighlight underlayColor={colors.darkGray} onPress={onPress}>
       <View style={styles.container}>
         {IconComponent}
         {image && <Image style={styles.image} source={image} />}
         <View style={styles.detailsContainer}>
-          <AppText style={styles.title} numberOfLines={1}>
+          <AppText style={[styles.title, titleStyle]} numberOfLines={1}>
             {title}
           </AppText>
           {subTitle && (
@@ -36,20 +44,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     padding: 10,
-    backgroundColor: colors.bglight,
+    backgroundColor: colors.white,
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     borderRadius: 35,
   },
   title: {
     fontWeight: "500",
-    color: colors.white,
+    fontSize: 16,
+    color: colors.darkGray,
+    fontFamily: fonts.fifthBoldItalic,
   },
   subTitle: {
     color: colors.medium,
-    color: colors.white,
+    color: colors.darkGray,
+    fontFamily: fonts.thirdBoldItalic,
   },
   detailsContainer: {
     flex: 1,

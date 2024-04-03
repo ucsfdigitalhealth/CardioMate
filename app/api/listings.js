@@ -4,18 +4,16 @@ const endpoint = "/listings";
 
 const getListings = () => client.get(endpoint);
 
-export const addListing = (listing, onUploadProgress) => {
+export const addListing = (combinedData, onUploadProgress) => {
+  //console.log("----before api");
+  //console.log(updatedResponses);
+  //console.log("----before api----");
+
   const data = new FormData();
-  data.append("categoryLabel", listing.category.label);
-  data.append("categoryId", listing.category.value);
-  data.append("questionId", listing.cquestion);
-  data.append("cuserId", listing.cuser);
-  data.append("substanceValue", listing.substanceValue);
-  data.append("substanceLabel", listing.substanceLabel);
-  data.append("cuseValue", listing.cuseValue);
-  data.append("cuseLabel", listing.cuseLabel);
-  data.append("userBadge", listing.userBadge);
+  data.append("payload", JSON.stringify(combinedData)); // Make sure to stringify
+  data.append("userId", combinedData.userId); // Assuming userId is part of updatedResponses
   //console.log(data);
+
   // listing.images.forEach((image, index) =>
   //   data.append("images", {
   //     name: "image" + index,

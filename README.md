@@ -1,6 +1,6 @@
 # My Project
 
-React Native part of the BanAware mobile application
+React Native part of the CardioMate mobile application
 
 ## Installation
 

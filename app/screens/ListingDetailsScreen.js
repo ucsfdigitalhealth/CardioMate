@@ -3,10 +3,10 @@ import { Image, View, StyleSheet, ScrollView } from "react-native";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
+import fonts from "../config/fonts";
 
 function ListingDetailsScreen({ route }) {
   const listing = route.params;
-  //console.log(listing);
   return (
     <ScrollView>
       <Screen>
@@ -16,8 +16,16 @@ function ListingDetailsScreen({ route }) {
             <View style={styles.titleContainer}>
               <AppText style={styles.title}>{listing.title}</AppText>
             </View>
-            <AppText style={styles.explanation}>{listing.explanation}</AppText>
-            <AppText style={styles.explanation}>{listing.extraInfo}</AppText>
+            <View style={styles.explanation}>
+              <AppText style={styles.explanationText}>
+                {listing.explanation}
+              </AppText>
+            </View>
+            <View style={styles.explanation}>
+              <AppText style={styles.explanationText}>
+                {listing.extraInfo}
+              </AppText>
+            </View>
           </View>
         </View>
       </Screen>
@@ -31,10 +39,14 @@ const styles = StyleSheet.create({
   },
   explanation: {
     backgroundColor: colors.secondary,
-    color: colors.white,
-    padding: 15,
     marginBottom: 10,
     borderRadius: 20,
+  },
+  explanationText: {
+    color: colors.white,
+    padding: 15,
+    fontFamily: fonts.fifthRegular,
+    textAlign: "justify",
   },
   image: {
     width: "100%",
