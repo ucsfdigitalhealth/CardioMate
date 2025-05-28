@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "owner": "akargaran",
+    "name": "CardioMate_v2",
+    "slug": "cardiomatev2",
+    "scheme": "myapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./app/assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./app/assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#063852"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/dad8b217-d59e-4126-93fe-beb883cad8b1"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      "expo-font",
+      "expo-secure-store"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alikargarandehkordi.cardiomate",
+      "buildNumber": "1.1.6",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "newArchEnabled": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.alikargarandehkordi.cardiomate",
+      "versionCode": 1,
+      "newArchEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.NOTIFICATIONS",
+        "android.permission.USER_FACING_NOTIFICATIONS",
+        "android.permission.INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./app/assets/favicon.png"
+    },
+    "description": "An EMA App to log user's conditions!",
+    "notification": {
+      "iosDisplayInForeground": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ab70e19e-b177-4ff8-9b6e-f1e7cbdeba56"
+      }
+    },
+    "runtimeVersion": "1.0.0"
+  }
+}
